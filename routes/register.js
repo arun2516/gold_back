@@ -7,6 +7,7 @@ router.post("/signup",reg.signup);
 router.post("/resetpass",reg.reset);
 router.post('/newpass',reg.newpass);
 router.post('/adminsignup',reg.adminsignup);
-router.post("/adminsignin",reg.adminsignin)
+router.post("/adminsignin",reg.adminsignin);
+router.get("/getuserdata",reg.getuserdata);
 
 module.exports = router;

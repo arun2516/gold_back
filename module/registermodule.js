@@ -14,7 +14,11 @@ const sgmail = require("@sendgrid/mail");
 sgmail.setApiKey(process.env.SIGAPI)
 
 
+exports.getuserdata = async(req,res)=>{
+    var registeruser = await user.find();
+    res.send(registeruser);
 
+}
 
 exports.adminsignup = async(req,res)=>{
     const schema = joi.object({

@@ -5,8 +5,8 @@ exports.contactus = async(req,res,next)=>{
     // user input validation by joi validation
 
     const schema = joi.object({
-        firstname:joi.string().min(2).required(),
-        lastname:joi.string().min(3),
+        name:joi.string().min(2).required(),
+        city:joi.string().min(3).required(),
         mobileno:joi.number().min(10).required(),
         email:joi.string().min(6).max(50).email().required(),
         message:joi.string().min(5).max(150).required(),
@@ -19,8 +19,8 @@ exports.contactus = async(req,res,next)=>{
    
 
     const Contactus = new contactus({
-        firstname:req.body.firstname,
-        lastname:req.body.lastname,
+        name:req.body.name,
+        city:req.body.city,
         mobileno:req.body.mobileno,
         email:req.body.email,
         message:req.body.message

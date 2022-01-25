@@ -2,14 +2,15 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const contactusschema = new Schema({
-    firstname:{
+    name:{
         type:String,
         minlength:2,
         required:true
     },
-    lastname:{
+    city:{
         type:String,
         minlength:3,
+        required:true
     },
    
     email:{
