@@ -11,7 +11,7 @@ const sgmail = require("@sendgrid/mail");
 
 
 //
-sgmail.setApiKey("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")
+sgmail.setApiKey(process.env.SIGAPI)
 
 
 
