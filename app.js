@@ -2,21 +2,30 @@ require("dotenv").config();
 const express = require("express");
 const PORT = process.env.PORT;
 const mongo = require("./connect");
+const mongo2 = require("./Connection2");
 const cors = require("cors");
 const app = express();
 const registerrouter = require("./routes/register");
 const authorisationmodule= require("./module/authorizationmodule");
+const golddata = require("./routes/Golddata");
+const todayprice = require("./routes/admin");
+const contactus = require("./routes/contactus");
 
 (async () => {
   try {
     await mongo.connect();
+    await mongo2.connect()
 
     app.use(express.json());
 
     app.use(cors());
      
     app.use("/register",registerrouter);
+    app.use("/all",golddata);
+    app.use("/enquiry",contactus);
     app.use(authorisationmodule.authorizeuser);
+    app.use("/add",todayprice);
+    
     
   
     

@@ -1,4 +1,5 @@
 const user = require("../model/user");
+const admin = require("../model/admin");
 const joi = require("joi");
 const brcypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -13,7 +14,30 @@ const sgmail = require("@sendgrid/mail");
 sgmail.setApiKey("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")
 
 
-const EMAIL = "toarun25@gmail.com"
+
+
+exports.adminsignup = async(req,res)=>{
+    const schema = joi.object({
+      
+        email:joi.string().required(),
+        password:joi.string().min(8).required(),
+
+    })
+    var {error} = await schema.validate(req.body);
+    if(error) return res.status(400).send({msg:error.details[0].message});
+    var exituser = await admin.findOne({'email':req.body.email}).exec();
+    if(exituser) return res.status(400).send({msg:"email already exists"});
+    const salt = await brcypt.genSalt(10);
+    req.body.password  = await brcypt.hash(req.body.password,salt);
+
+    const Admin = new admin({
+        email:req.body.email,
+        password:req.body.password
+    })
+
+    var response = await Admin.save();
+    res.send(response);
+}
 
 
 exports.signup = async(req,res,next)=>{
@@ -50,6 +74,27 @@ exports.signup = async(req,res,next)=>{
     var response = await User.save();
     res.send(response);
     
+}
+
+
+exports.adminsignin = async(req,res)=>{
+    const schema = joi.object({
+        email:joi.string().required(),
+        password:joi.string().min(8).required(),
+    })
+    var {error} = await schema.validate(req.body);
+    if(error) return res.status(400).send({msg:error.details[0].message});
+
+    const exituser = await admin.findOne({"email":req.body.email}).exec();
+    if(!exituser) return res.status(400).send({msg:"email not registered as admin"});
+
+    const isvalid = await brcypt.compare(req.body.password,exituser.password);
+    if(!isvalid) return res.status(400).send({msg:"password doesnt match"});
+
+     // generate token
+     var token  = jwt.sign({exituser},process.env.ADMINSECRETKEY,{expiresIn:"1800s"});
+     res.send(token);
+
 }
 
 exports.signin = async(req,res,next)=>{
