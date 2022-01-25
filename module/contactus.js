@@ -30,3 +30,8 @@ exports.contactus = async(req,res,next)=>{
     res.send(response);
     
 }
+
+exports.getcontactus = async(req,res,next)=>{
+    const data = await contactus.find();
+    res.send(data);
+}
