@@ -2,7 +2,11 @@
   "name": "gold_back",
   "version": "1.0.0",
   "description": "",
+  "engines": {
+    "node": "16.13.0"
+  },
   "main": "index.js",
+ 
   "scripts": {
     "start": "nodemon app.js"
   },
