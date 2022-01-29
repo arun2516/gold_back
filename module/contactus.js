@@ -35,3 +35,9 @@ exports.getcontactus = async(req,res,next)=>{
     const data = await contactus.find();
     res.send(data);
 }
+
+exports.deletecontactus = async(req,res)=>{
+    const id = req.params.id;
+    const response = await contactus.findByIdAndDelete(id);
+    res.send(response);
+}
