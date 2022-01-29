@@ -5,7 +5,6 @@ const mongo = require("./connect");
 const mongo2 = require("./Connection2");
 const cors = require("cors");
 const app = express();
-const path = require("path")
 const registerrouter = require("./routes/register");
 const authorisationmodule= require("./module/authorizationmodule");
 const golddata = require("./routes/Golddata");
@@ -28,7 +27,7 @@ const addmember = require("./module/marketingteam");
     app.use("/register",registerrouter);
     app.use("/all",golddata);
     app.use("/enquiry",contactus);
-    // app.use(authorisationmodule.authorizeuser);
+    app.use(authorisationmodule.authorizeuser);
     app.use("/add",todayprice);
     app.use("/public",express.static('public'));
     app.use("/marketing",addmember);

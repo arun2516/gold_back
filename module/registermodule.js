@@ -1,7 +1,7 @@
 const user = require("../model/user");
 const admin = require("../model/admin");
 const joi = require("joi");
-const brcypt = require("bcrypt");
+const brcypt = require("bcryptjs")
 const jwt = require("jsonwebtoken");
 
 
@@ -26,8 +26,8 @@ exports.adminsignup = async(req,res)=>{
     if(error) return res.status(400).send({msg:error.details[0].message});
     var exituser = await admin.findOne({'email':req.body.email}).exec();
     if(exituser) return res.status(400).send({msg:"email already exists"});
-    const salt = await brcypt.genSalt(10);
-    req.body.password  = await brcypt.hash(req.body.password,salt);
+    const salt = await brcypt.genSaltSync(10);
+    req.body.password  = await brcypt.hashSync(req.body.password,salt);
 
     const Admin = new admin({
         email:req.body.email,
@@ -59,8 +59,8 @@ exports.signup = async(req,res,next)=>{
     if(exituser) return res.status(400).send({msg:"email already exists"});
 
     //create /register
-    const salt = await brcypt.genSalt(10);
-    req.body.password  = await brcypt.hash(req.body.password,salt);
+    const salt = await brcypt.genSaltSync(10);
+    req.body.password  = await brcypt.hashSync(req.body.password,salt);
 
     const User = new user({
         firstname:req.body.firstname,
@@ -87,7 +87,7 @@ exports.adminsignin = async(req,res)=>{
     const exituser = await admin.findOne({"email":req.body.email}).exec();
     if(!exituser) return res.status(400).send({msg:"email not registered as admin"});
 
-    const isvalid = await brcypt.compare(req.body.password,exituser.password);
+    const isvalid = await brcypt.compareSync(req.body.password,exituser.password);
     if(!isvalid) return res.status(400).send({msg:"password doesnt match"});
 
      // generate token
@@ -112,7 +112,7 @@ exports.signin = async(req,res,next)=>{
     if(!exituser) return res.status(400).send({msg:"email not registered"});
 
     // password compare check
-    const isvalid = await brcypt.compare(req.body.password,exituser.password);
+    const isvalid = await brcypt.compareSync(req.body.password,exituser.password);
     if(!isvalid) return res.status(400).send({msg:"password doesnt match"});
 
     // generate token
