@@ -3,15 +3,10 @@ const admin = require("../model/admin");
 const joi = require("joi");
 const brcypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const crypto = require("crypto");
-const sgmail = require("@sendgrid/mail");
 
 
-// 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
 
 
-//
-sgmail.setApiKey(process.env.SIGAPI)
 
 
 exports.getuserdata = async(req,res)=>{
@@ -125,56 +120,5 @@ exports.signin = async(req,res,next)=>{
     res.send(token);
 }
 
-exports.reset=async(req,res,next)=>{
-   await crypto.randomBytes(32,(err,buffer)=>{
-        if(err){
-            console.log(err)
-        }
-        const token = buffer.toString("hex")
-       user.findOne({email:req.body.email})
-        .then(user=>{
-            if(!user){
-                return res.status(422).json({error:"user dont exist with that email"})
-            }
-            user.resettoken = token
-            user.expiretoken = Date.now()+3600000
-            user.save().then((result)=>{
-                sgmail.send({
-                    to:user.email,
-                    from:'toarun25@gmail.com',
-                    subject:"Password reset",
-                    html:`
-                    <p>You requested for Password reset</p>
-                    <h5>click in this <a href="http://localhost:3000/newpass/${token}">link</a> to reset Password</h5>
-                    `
-                })
-                res.json({message:"check your email and Reset Your Password"})
-            })
-        })
-            
-           
-           
-        
-    })
-}
 
-exports.newpass = async(req,res,next)=>{
-    const newpassword = req.body.password;
-    const sendtoken = req.body.token;
-    user.findOne({resettoken:sendtoken, expiretoken:{$gt:Date.now()}})
-    .then(user=>{
-        if(!user){
-            return res.status(422).json({error:"try again session expired"})
-        }
-        brcypt.hash(newpassword,10).then(hashedpassword=>{
-            user.password = hashedpassword
-            user.resettoken = undefined
-            user.expiretoken = undefined
-            user.save().then((saveduser)=>{
-                res.json({message:"password updated success"})
-            })
-        })
-    }).catch(err=>{
-        console.log(err);
-    })
-}
+
