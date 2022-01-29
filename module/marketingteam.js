@@ -42,7 +42,6 @@ router.post("/addmember",upload.single("image"),async(req,res)=>{
         image:url + '/public/' + req.file.filename
         
     });
-console.log(req.file)
     const response = await Marketingteam.save();
     res.send(response);
 })
